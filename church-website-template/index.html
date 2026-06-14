@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A simple church website template for Cloudflare Pages." />
+  <title>Grace Community Church</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="navbar">
+      <a href="#home" class="logo">Grace Community Church</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#events">Events</a></li>
+        <li><a href="#sermons">Sermons</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home" class="hero">
+      <div class="hero-content">
+        <p class="eyebrow">Welcome Home</p>
+        <h1>A church for your family, faith, and community.</h1>
+        <p>Join us this Sunday as we worship, grow, and serve together.</p>
+        <div class="hero-actions">
+          <a href="#services" class="btn primary">Plan Your Visit</a>
+          <a href="#sermons" class="btn secondary">Watch Sermons</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="section split">
+      <div>
+        <p class="section-label">About Us</p>
+        <h2>Helping people know Christ and make Him known.</h2>
+      </div>
+      <div>
+        <p>
+          Grace Community Church is a welcoming local church focused on biblical teaching,
+          worship, discipleship, and serving our neighbors.
+        </p>
+        <p>
+          Replace this text with your church mission, pastor welcome, or statement of faith.
+        </p>
+      </div>
+    </section>
+
+    <section id="services" class="section light-section">
+      <p class="section-label">Service Times</p>
+      <h2>Come worship with us.</h2>
+      <div class="cards">
+        <article class="card">
+          <h3>Sunday School</h3>
+          <p>Sunday at 9:30 AM</p>
+        </article>
+        <article class="card">
+          <h3>Morning Worship</h3>
+          <p>Sunday at 10:45 AM</p>
+        </article>
+        <article class="card">
+          <h3>Midweek Bible Study</h3>
+          <p>Wednesday at 7:00 PM</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="events" class="section">
+      <p class="section-label">Upcoming Events</p>
+      <h2>Get connected.</h2>
+      <div class="event-list">
+        <div class="event-item">
+          <span class="event-date">JUL 07</span>
+          <div>
+            <h3>Community Cookout</h3>
+            <p>Food, fellowship, and games for the whole family.</p>
+          </div>
+        </div>
+        <div class="event-item">
+          <span class="event-date">JUL 14</span>
+          <div>
+            <h3>Youth Night</h3>
+            <p>A night of worship, games, and Bible study for teens.</p>
+          </div>
+        </div>
+        <div class="event-item">
+          <span class="event-date">AUG 03</span>
+          <div>
+            <h3>Church Picnic</h3>
+            <p>Bring a side dish and invite a friend.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sermons" class="section light-section">
+      <p class="section-label">Sermons</p>
+      <h2>Latest message</h2>
+      <div class="sermon-box">
+        <div>
+          <h3>Walking by Faith</h3>
+          <p>Pastor John Smith · Romans 5:1-5</p>
+        </div>
+        <a href="#" class="btn primary">Watch Now</a>
+      </div>
+    </section>
+
+    <section id="contact" class="section contact-section">
+      <div>
+        <p class="section-label">Contact</p>
+        <h2>We would love to hear from you.</h2>
+        <p>123 Church Street<br />Your City, ST 12345</p>
+        <p>Email: hello@examplechurch.org<br />Phone: (555) 123-4567</p>
+      </div>
+      <form class="contact-form" name="contact" method="POST" data-netlify="true">
+        <label>
+          Name
+          <input type="text" name="name" placeholder="Your name" required />
+        </label>
+        <label>
+          Email
+          <input type="email" name="email" placeholder="you@example.com" required />
+        </label>
+        <label>
+          Message
+          <textarea name="message" rows="5" placeholder="How can we help?" required></textarea>
+        </label>
+        <button class="btn primary" type="submit">Send Message</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; <span id="year"></span> Grace Community Church. All rights reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
