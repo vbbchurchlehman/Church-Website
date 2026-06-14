@@ -76,14 +76,19 @@ body {
 }
 
 .hero {
-  min-height: 78vh;
-  display: flex;
-  align-items: center;
-  background:
-    linear-gradient(rgba(20, 37, 32, 0.72), rgba(20, 37, 32, 0.72)),
-    url('https://github.com/vbbchurchlehman/Church-Website/blob/main/church-website-template/church.jpg') center/cover;
-  color: var(--white);
-  padding: 5rem 1.5rem;
+    background-image: url('images/church.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    min-height: 500px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+    color: white;
 }
 
 .hero-content {
