@@ -255,7 +255,20 @@ h2 {
   justify-content: space-between;
   align-items: center;
 }
+.social-links {
+  margin-bottom: 30px;
+}
 
+.facebook-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.facebook-link:hover {
+  transform: scale(1.1);
+}
 .section-actions {
   text-align: center;
   margin-top: 2rem;
