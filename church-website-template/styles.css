@@ -278,4 +278,28 @@ textarea {
   .hero {
     min-height: 68vh;
   }
+ .about-section {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.about-section h2 {
+  margin-bottom: 30px;
+}
+
+.about-content {
+  width: 100%;
+  max-width: 100%;
+}
+
+.about-content p,
+.about-content li {
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.about-content ol {
+  margin-top: 10px;
+  padding-left: 24px;
+} 
 }
