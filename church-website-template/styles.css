@@ -1,3 +1,4 @@
+```css
 :root {
   --primary: #2f5d50;
   --primary-dark: #214238;
@@ -28,8 +29,8 @@ body {
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 10;
-  background: rgba(255, 255, 255, 0.96);
+  z-index: 100;
+  background: rgba(255,255,255,0.96);
   border-bottom: 1px solid var(--border);
 }
 
@@ -58,8 +59,8 @@ body {
 }
 
 .nav-links a {
-  color: var(--text);
   text-decoration: none;
+  color: var(--text);
   font-weight: 600;
 }
 
@@ -80,24 +81,22 @@ body {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  min-height: 500px;
+  min-height: 75vh;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: white;
-  padding: 2rem 1.5rem;
+  color: var(--white);
+  padding: 2rem;
 }
 
 .hero-content {
   max-width: 760px;
-  margin: 0 auto;
-  text-align: center;
 }
 
 .hero h1 {
-  font-size: clamp(2.4rem, 7vw, 4.8rem);
-  line-height: 1.05;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  line-height: 1.1;
   margin: 0.5rem 0 1rem;
 }
 
@@ -110,8 +109,7 @@ body {
   font-size: 0.8rem;
 }
 
-.hero-actions,
-.sermon-box {
+.hero-actions {
   display: flex;
   gap: 1rem;
   justify-content: center;
@@ -122,11 +120,16 @@ body {
 .btn {
   display: inline-block;
   border-radius: 999px;
-  padding: 0.8rem 1.2rem;
+  padding: 0.8rem 1.3rem;
   text-decoration: none;
   font-weight: 700;
   border: 2px solid transparent;
   cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
 }
 
 .btn.primary {
@@ -156,24 +159,19 @@ body {
   margin-right: auto;
 }
 
-.split {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
+h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin: 0.5rem 0 1.5rem;
+  line-height: 1.15;
 }
 
 .about-section {
-  max-width: 1180px;
+  max-width: 1120px;
   margin: 0 auto;
-}
-
-.about-section h2 {
-  margin-bottom: 30px;
 }
 
 .about-content {
   width: 100%;
-  max-width: 100%;
 }
 
 .about-content p,
@@ -183,14 +181,7 @@ body {
 }
 
 .about-content ol {
-  margin-top: 10px;
   padding-left: 24px;
-}
-
-h2 {
-  font-size: clamp(2rem, 4vw, 3rem);
-  line-height: 1.15;
-  margin: 0.5rem 0 1.5rem;
 }
 
 .cards {
@@ -208,13 +199,22 @@ h2 {
   border: 1px solid var(--border);
   border-radius: 18px;
   padding: 1.5rem;
-  box-shadow: 0 10px 30px rgba(31, 41, 51, 0.06);
+  box-shadow: 0 10px 30px rgba(31,41,51,0.06);
+}
+
+.card h3 {
+  margin-top: 0;
 }
 
 .event-list {
   display: grid;
   gap: 1rem;
   margin-top: 2rem;
+}
+
+.large-event-list {
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .event-item {
@@ -228,14 +228,27 @@ h2 {
   color: var(--white);
   border-radius: 12px;
   padding: 0.75rem;
-  font-weight: 700;
-  min-width: 72px;
+  min-width: 80px;
   text-align: center;
+  font-weight: 700;
+}
+
+.sermon-list {
+  display: grid;
+  gap: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.sermon-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .section-actions {
-  margin-top: 35px;
   text-align: center;
+  margin-top: 2rem;
 }
 
 .page-hero {
@@ -246,23 +259,12 @@ h2 {
 
 .page-hero h1 {
   font-size: clamp(2.5rem, 6vw, 4.5rem);
-  margin: 10px 0 16px;
+  margin-bottom: 1rem;
 }
 
 .page-hero p {
   max-width: 720px;
   margin: 0 auto;
-  font-size: 1.1rem;
-}
-
-.large-event-list {
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.sermon-box {
-  justify-content: space-between;
-  align-items: center;
 }
 
 .contact-section {
@@ -298,6 +300,12 @@ textarea {
   color: var(--white);
 }
 
+@media (max-width: 900px) {
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 760px) {
   .menu-toggle {
     display: block;
@@ -309,9 +317,9 @@ textarea {
     top: 66px;
     left: 0;
     right: 0;
-    flex-direction: column;
     background: var(--white);
-    padding: 1rem 1.5rem 1.5rem;
+    flex-direction: column;
+    padding: 1rem 1.5rem;
     border-bottom: 1px solid var(--border);
   }
 
@@ -319,21 +327,19 @@ textarea {
     display: flex;
   }
 
-  .split,
   .cards,
   .contact-section {
     grid-template-columns: 1fr;
   }
 
-  .hero {
-    min-height: 68vh;
-  }
-
-  .event-item {
-    flex-direction: column;
-  }
-
+  .event-item,
   .sermon-box {
+    flex-direction: column;
     align-items: flex-start;
   }
+
+  .hero {
+    min-height: 65vh;
+  }
 }
+```
