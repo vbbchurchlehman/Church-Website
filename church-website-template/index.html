@@ -149,7 +149,7 @@
         <p>1256 Market Street <br />Dallas, PA 18612</p>
         <p>Email: vbbchurch@gmail.com<br />Phone: (570) 328-5595</p>
       </div>
-      <form class="contact-form" name="contact" method="POST" data-netlify="true">
+      <form id="contactForm" class="contact-form" method="POST" action="/contact">
         <label>
           Name
           <input type="text" name="name" placeholder="Your name" required />
@@ -162,7 +162,11 @@
           Message
           <textarea name="message" rows="5" placeholder="How can we help?" required></textarea>
         </label>
-        <button class="btn primary" type="submit">Send Message</button>
+          <button class="btn primary" type="submit">
+            Send Message
+          </button>
+
+          <p id="formStatus"></p>
       </form>
     </section>
   </main>
