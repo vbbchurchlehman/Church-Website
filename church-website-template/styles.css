@@ -76,19 +76,17 @@ body {
 }
 
 .hero {
-    background-image: url('images/church.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-
-    min-height: 500px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    text-align: center;
-    color: white;
+  background-image: url('images/church.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  padding: 2rem 1.5rem;
 }
 
 .hero-content {
@@ -164,6 +162,31 @@ body {
   gap: 3rem;
 }
 
+.about-section {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.about-section h2 {
+  margin-bottom: 30px;
+}
+
+.about-content {
+  width: 100%;
+  max-width: 100%;
+}
+
+.about-content p,
+.about-content li {
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.about-content ol {
+  margin-top: 10px;
+  padding-left: 24px;
+}
+
 h2 {
   font-size: clamp(2rem, 4vw, 3rem);
   line-height: 1.15;
@@ -208,6 +231,33 @@ h2 {
   font-weight: 700;
   min-width: 72px;
   text-align: center;
+}
+
+.section-actions {
+  margin-top: 35px;
+  text-align: center;
+}
+
+.page-hero {
+  padding: 140px 24px 80px;
+  text-align: center;
+  background: var(--light);
+}
+
+.page-hero h1 {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  margin: 10px 0 16px;
+}
+
+.page-hero p {
+  max-width: 720px;
+  margin: 0 auto;
+  font-size: 1.1rem;
+}
+
+.large-event-list {
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .sermon-box {
@@ -278,28 +328,12 @@ textarea {
   .hero {
     min-height: 68vh;
   }
- .about-section {
-  max-width: 1180px;
-  margin: 0 auto;
-}
 
-.about-section h2 {
-  margin-bottom: 30px;
-}
+  .event-item {
+    flex-direction: column;
+  }
 
-.about-content {
-  width: 100%;
-  max-width: 100%;
-}
-
-.about-content p,
-.about-content li {
-  font-size: 1.05rem;
-  line-height: 1.8;
-}
-
-.about-content ol {
-  margin-top: 10px;
-  padding-left: 24px;
-} 
+  .sermon-box {
+    align-items: flex-start;
+  }
 }
