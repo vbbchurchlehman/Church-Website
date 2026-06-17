@@ -331,11 +331,15 @@ h2 {
   margin: 0 auto;
 }
 
+.contact-wrapper {
+  background: var(--light);
+  width: 100%;
+}
+
 .contact-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
-  background: var(--light);
 }
 
 .contact-form {
