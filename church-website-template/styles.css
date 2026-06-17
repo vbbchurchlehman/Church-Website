@@ -335,6 +335,7 @@ h2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
+  background: var(--light);
 }
 
 .contact-form {
