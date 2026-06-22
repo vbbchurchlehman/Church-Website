@@ -1,11 +1,20 @@
 const eventForm = document.getElementById("eventForm");
 const eventId = document.getElementById("eventId");
-const eventDate = document.getElementById("eventDate");
+const eventSortDate = document.getElementById("eventSortDate");
 const eventTitle = document.getElementById("eventTitle");
 const eventDescription = document.getElementById("eventDescription");
 const eventsAdminList = document.getElementById("eventsAdminList");
 const cancelEdit = document.getElementById("cancelEdit");
-const eventSortDate = document.getElementById("eventSortDate");
+
+function formatDisplayDate(sortDate) {
+  const [year, month, day] = sortDate.split("-");
+  const date = new Date(Number(year), Number(month) - 1, Number(day));
+
+  return date.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric"
+  });
+}
 
 async function loadEvents() {
   const response = await fetch("/api/events");
@@ -25,7 +34,7 @@ async function loadEvents() {
             <button
               class="btn primary"
               type="button"
-              "onclick="editEvent(${event.id}, '${escapeForJs(event.event_date)}', '${escapeForJs(event.event_sort_date)}', '${escapeForJs(event.title)}', '${escapeForJs(event.description)}')"
+              onclick="editEvent(${event.id}, '${escapeForJs(event.event_sort_date)}', '${escapeForJs(event.title)}', '${escapeForJs(event.description)}')">
               Edit
             </button>
 
@@ -43,16 +52,15 @@ async function loadEvents() {
 }
 
 function escapeForJs(value) {
-  return String(value)
+  return String(value || "")
     .replace(/\\/g, "\\\\")
     .replace(/'/g, "\\'")
     .replace(/\n/g, "\\n")
     .replace(/\r/g, "");
 }
 
-function editEvent(id, date, sortDate, title, description) {
+function editEvent(id, sortDate, title, description) {
   eventId.value = id;
-  eventDate.value = date;
   eventSortDate.value = sortDate;
   eventTitle.value = title;
   eventDescription.value = description;
@@ -67,12 +75,12 @@ eventForm.addEventListener("submit", async e => {
   e.preventDefault();
 
   const payload = {
-  id: eventId.value,
-  event_date: eventDate.value,
-  event_sort_date: eventSortDate.value,
-  title: eventTitle.value,
-  description: eventDescription.value
-};
+    id: eventId.value,
+    event_date: formatDisplayDate(eventSortDate.value),
+    event_sort_date: eventSortDate.value,
+    title: eventTitle.value,
+    description: eventDescription.value
+  };
 
   const isEditing = Boolean(eventId.value);
 
