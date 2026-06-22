@@ -25,7 +25,7 @@ async function loadEvents() {
             <button
               class="btn primary"
               type="button"
-              onclick="editEvent(${event.id}, '${escapeForJs(event.event_date)}', '${escapeForJs(event.title)}', '${escapeForJs(event.description)}')">
+              "onclick="editEvent(${event.id}, '${escapeForJs(event.event_date)}', '${escapeForJs(event.event_sort_date)}', '${escapeForJs(event.title)}', '${escapeForJs(event.description)}')"
               Edit
             </button>
 
