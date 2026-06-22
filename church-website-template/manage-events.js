@@ -84,13 +84,19 @@ eventForm.addEventListener("submit", async e => {
 
   const isEditing = Boolean(eventId.value);
 
-  await fetch("/api/events", {
+  const response = await fetch("/api/events", {
     method: isEditing ? "PUT" : "POST",
     headers: {
       "Content-Type": "application/json"
     },
     body: JSON.stringify(payload)
   });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    alert("Event did not save. Error: " + errorText);
+    return;
+  }
 
   eventForm.reset();
   eventId.value = "";
@@ -105,9 +111,15 @@ cancelEdit.addEventListener("click", () => {
 async function deleteEvent(id) {
   if (!confirm("Delete this event?")) return;
 
-  await fetch(`/api/events?id=${id}`, {
+  const response = await fetch(`/api/events?id=${id}`, {
     method: "DELETE"
   });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    alert("Event did not delete. Error: " + errorText);
+    return;
+  }
 
   loadEvents();
 }
