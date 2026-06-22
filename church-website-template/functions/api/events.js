@@ -20,6 +20,21 @@ export async function onRequestPost(context) {
   return Response.json({ success: true });
 }
 
+export async function onRequestPut(context) {
+  const data = await context.request.json();
+
+  await context.env.DB
+    .prepare(`
+      UPDATE events
+      SET event_date = ?, title = ?, description = ?
+      WHERE id = ?
+    `)
+    .bind(data.event_date, data.title, data.description, data.id)
+    .run();
+
+  return Response.json({ success: true });
+}
+
 export async function onRequestDelete(context) {
   const url = new URL(context.request.url);
   const id = url.searchParams.get("id");
