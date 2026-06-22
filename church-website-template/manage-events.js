@@ -23,47 +23,41 @@ async function loadEvents() {
   eventsAdminList.innerHTML = "";
 
   events.forEach(event => {
-    eventsAdminList.innerHTML += `
-      <div class="event-item">
-        <span class="event-date">${event.event_date}</span>
-        <div>
-          <h3>${event.title}</h3>
-          <p>${event.description}</p>
+    const item = document.createElement("div");
+    item.className = "event-item";
 
-          <div class="admin-actions">
-            <button
-              class="btn primary"
-              type="button"
-              onclick="editEvent(${event.id}, '${escapeForJs(event.event_sort_date)}', '${escapeForJs(event.title)}', '${escapeForJs(event.description)}')">
-              Edit
-            </button>
+    item.innerHTML = `
+      <span class="event-date">${event.event_date}</span>
+      <div>
+        <h3>${event.title}</h3>
+        <p>${event.description}</p>
 
-            <button
-              class="btn danger"
-              type="button"
-              onclick="deleteEvent(${event.id})">
-              Delete
-            </button>
-          </div>
+        <div class="admin-actions">
+          <button class="btn primary" type="button">Edit</button>
+          <button class="btn danger" type="button">Delete</button>
         </div>
       </div>
     `;
+
+    const buttons = item.querySelectorAll("button");
+
+    buttons[0].addEventListener("click", () => {
+      editEvent(event);
+    });
+
+    buttons[1].addEventListener("click", () => {
+      deleteEvent(event.id);
+    });
+
+    eventsAdminList.appendChild(item);
   });
 }
 
-function escapeForJs(value) {
-  return String(value || "")
-    .replace(/\\/g, "\\\\")
-    .replace(/'/g, "\\'")
-    .replace(/\n/g, "\\n")
-    .replace(/\r/g, "");
-}
-
-function editEvent(id, sortDate, title, description) {
-  eventId.value = id;
-  eventSortDate.value = sortDate;
-  eventTitle.value = title;
-  eventDescription.value = description;
+function editEvent(event) {
+  eventId.value = event.id;
+  eventSortDate.value = event.event_sort_date;
+  eventTitle.value = event.title;
+  eventDescription.value = event.description;
 
   window.scrollTo({
     top: eventForm.offsetTop - 100,
@@ -92,15 +86,18 @@ eventForm.addEventListener("submit", async e => {
     body: JSON.stringify(payload)
   });
 
+  const resultText = await response.text();
+
   if (!response.ok) {
-    const errorText = await response.text();
-    alert("Event did not save. Error: " + errorText);
+    alert("Event did not save: " + resultText);
     return;
   }
 
   eventForm.reset();
   eventId.value = "";
-  loadEvents();
+  await loadEvents();
+
+  alert(isEditing ? "Event updated." : "Event added.");
 });
 
 cancelEdit.addEventListener("click", () => {
@@ -117,11 +114,11 @@ async function deleteEvent(id) {
 
   if (!response.ok) {
     const errorText = await response.text();
-    alert("Event did not delete. Error: " + errorText);
+    alert("Event did not delete: " + errorText);
     return;
   }
 
-  loadEvents();
+  await loadEvents();
 }
 
 loadEvents();
