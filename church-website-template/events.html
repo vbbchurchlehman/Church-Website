@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,12 +11,17 @@
   <header class="site-header">
     <nav class="navbar">
       <a href="index.html" class="logo">Victory Baptist Bible Church</a>
-      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
+        ☰
+      </button>
+
       <ul class="nav-links" id="navLinks">
         <li><a href="index.html#about">About</a></li>
         <li><a href="index.html#services">Services</a></li>
         <li><a href="events.html">Events</a></li>
         <li><a href="sermons.html">Sermons</a></li>
+        <li><a href="index.html#faq">FAQ</a></li>
         <li><a href="index.html#contact">Contact</a></li>
       </ul>
     </nav>
@@ -25,70 +31,44 @@
     <section class="page-hero">
       <p class="eyebrow">Church Events</p>
       <h1>Upcoming Events</h1>
-      <p>Stay connected with what is happening at Victory Baptist Bible Church.</p>
+      <p>
+        Stay connected with what is happening at Victory Baptist Bible Church.
+      </p>
     </section>
 
     <section class="section">
-      <div class="event-list large-event-list">
+
+      <!-- Events loaded from database -->
+      <div id="publicEventsList" class="event-list large-event-list">
+
         <div class="event-item">
-          <span class="event-date">MONTH DATE</span>
+          <span class="event-date">Loading...</span>
           <div>
-            <h3>EVENT TITLE</h3>
-            <p>EVENT DESCRIPTION.</p>
+            <h3>Please Wait</h3>
+            <p>Events are loading.</p>
           </div>
         </div>
 
-        <div class="event-item">
-          <span class="event-date">MONTH DATE</span>
-          <div>
-            <h3>EVENT TITLE</h3>
-            <p>EVENT DESCRIPTION.</p>
-          </div>
-        </div>
-
-        <div class="event-item">
-          <span class="event-date">MONTH DATE</span>
-          <div>
-            <h3>EVENT TITLE</h3>
-            <p>EVENT DESCRIPTION.</p>
-          </div>
-        </div>
-
-        <div class="event-item">
-          <span class="event-date">MONTH DATE</span>
-          <div>
-            <h3>EVENT TITLE</h3>
-            <p>EVENT DESCRIPTION.</p>
-          </div>
-        </div>
-
-        <div class="event-item">
-          <span class="event-date">MONTH DATE</span>
-          <div>
-            <h3>EVENT TITLE</h3>
-            <p>EVENT DESCRIPTION.</p>
-          </div>
-        </div>
-
-        <div class="event-item">
-          <span class="event-date">MONTH DATE</span>
-          <div>
-            <h3>EVENT TITLE</h3>
-            <p>EVENT DESCRIPTION.</p>
-          </div>
-        </div>
       </div>
 
       <div class="section-actions">
-        <a href="index.html#events" class="btn secondary">Back Home</a>
+        <a href="index.html#events" class="btn secondary">
+          Back Home
+        </a>
       </div>
+
     </section>
   </main>
 
   <footer class="site-footer">
-    <p>&copy; <span id="year"></span> Victory Baptist Bible Church. All rights reserved.</p>
+    <p>
+      &copy; <span id="year"></span>
+      Victory Baptist Bible Church. All rights reserved.
+    </p>
   </footer>
 
   <script src="script.js"></script>
+  <script src="events.js"></script>
 </body>
 </html>
+```
