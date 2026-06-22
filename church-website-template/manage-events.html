@@ -27,7 +27,7 @@
         <input type="hidden" id="eventId" />
 
         <label>
-          Event Date
+          Event Date (Date in text format for display)
           <input type="text" id="eventDate" placeholder="MONTH DATE" required />
         </label>
 
@@ -40,7 +40,11 @@
           Event Description
           <textarea id="eventDescription" rows="4" placeholder="EVENT DESCRIPTION." required></textarea>
         </label>
-
+        
+        <label>
+          Sort Date (Date in mm/dd/yyyy format)
+          <input type="date" id="eventSortDate" required />
+        </label>
         <button class="btn primary" type="submit">Save Event</button>
         <button class="btn admin-cancel" type="button" id="cancelEdit">Cancel Edit</button>
       </form>
