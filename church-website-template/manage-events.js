@@ -1,103 +1,58 @@
-const eventForm = document.getElementById('eventForm');
-const eventId = document.getElementById('eventId');
-const eventDate = document.getElementById('eventDate');
-const eventTitle = document.getElementById('eventTitle');
-const eventDescription = document.getElementById('eventDescription');
-const eventsAdminList = document.getElementById('eventsAdminList');
-const cancelEdit = document.getElementById('cancelEdit');
+const eventForm = document.getElementById("eventForm");
+const eventDate = document.getElementById("eventDate");
+const eventTitle = document.getElementById("eventTitle");
+const eventDescription = document.getElementById("eventDescription");
+const eventsAdminList = document.getElementById("eventsAdminList");
 
-let events = JSON.parse(localStorage.getItem('churchEvents')) || [
-  {
-    id: crypto.randomUUID(),
-    date: 'MONTH DATE',
-    title: 'EVENT TITLE',
-    description: 'EVENT DESCRIPTION.'
-  },
-  {
-    id: crypto.randomUUID(),
-    date: 'MONTH DATE',
-    title: 'EVENT TITLE',
-    description: 'EVENT DESCRIPTION.'
-  },
-  {
-    id: crypto.randomUUID(),
-    date: 'MONTH DATE',
-    title: 'EVENT TITLE',
-    description: 'EVENT DESCRIPTION.'
-  }
-];
+async function loadEvents() {
+  const response = await fetch("/api/events");
+  const events = await response.json();
 
-function saveEvents() {
-  localStorage.setItem('churchEvents', JSON.stringify(events));
-}
-
-function renderEvents() {
-  eventsAdminList.innerHTML = '';
+  eventsAdminList.innerHTML = "";
 
   events.forEach(event => {
-    const item = document.createElement('div');
-    item.className = 'event-item';
-
-    item.innerHTML = `
-      <span class="event-date">${event.date}</span>
-      <div>
-        <h3>${event.title}</h3>
-        <p>${event.description}</p>
-        <div class="admin-actions">
-          <button class="btn primary" onclick="editEvent('${event.id}')">Edit</button>
-          <button class="btn danger" onclick="deleteEvent('${event.id}')">Delete</button>
+    eventsAdminList.innerHTML += `
+      <div class="event-item">
+        <span class="event-date">${event.event_date}</span>
+        <div>
+          <h3>${event.title}</h3>
+          <p>${event.description}</p>
+          <button class="btn danger" onclick="deleteEvent(${event.id})">
+            Delete
+          </button>
         </div>
       </div>
     `;
-
-    eventsAdminList.appendChild(item);
   });
 }
 
-function editEvent(id) {
-  const event = events.find(e => e.id === id);
-
-  if (!event) return;
-
-  eventId.value = event.id;
-  eventDate.value = event.date;
-  eventTitle.value = event.title;
-  eventDescription.value = event.description;
-}
-
-function deleteEvent(id) {
-  if (!confirm('Delete this event?')) return;
-
-  events = events.filter(e => e.id !== id);
-  saveEvents();
-  renderEvents();
-}
-
-eventForm.addEventListener('submit', e => {
+eventForm.addEventListener("submit", async e => {
   e.preventDefault();
 
-  const event = {
-    id: eventId.value || crypto.randomUUID(),
-    date: eventDate.value,
-    title: eventTitle.value,
-    description: eventDescription.value
-  };
+  await fetch("/api/events", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      event_date: eventDate.value,
+      title: eventTitle.value,
+      description: eventDescription.value
+    })
+  });
 
-  if (eventId.value) {
-    events = events.map(e => e.id === event.id ? event : e);
-  } else {
-    events.push(event);
-  }
-
-  saveEvents();
   eventForm.reset();
-  eventId.value = '';
-  renderEvents();
+  loadEvents();
 });
 
-cancelEdit.addEventListener('click', () => {
-  eventForm.reset();
-  eventId.value = '';
-});
+async function deleteEvent(id) {
+  if (!confirm("Delete this event?")) return;
 
-renderEvents();
+  await fetch(`/api/events?id=${id}`, {
+    method: "DELETE"
+  });
+
+  loadEvents();
+}
+
+loadEvents();
