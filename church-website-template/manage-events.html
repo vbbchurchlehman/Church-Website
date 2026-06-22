@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Events | Victory Baptist Bible Church</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="navbar">
+      <a href="admin.html" class="logo">Admin Dashboard</a>
+      <ul class="nav-links">
+        <li><a href="admin.html">Admin Home</a></li>
+        <li><a href="index.html">View Website</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section">
+      <p class="section-label">Admin</p>
+      <h1>Manage Events</h1>
+      <p>Add, edit, or remove church events.</p>
+
+      <form id="eventForm" class="contact-form admin-form">
+        <input type="hidden" id="eventId" />
+
+        <label>
+          Event Date
+          <input type="text" id="eventDate" placeholder="MONTH DATE" required />
+        </label>
+
+        <label>
+          Event Title
+          <input type="text" id="eventTitle" placeholder="EVENT TITLE" required />
+        </label>
+
+        <label>
+          Event Description
+          <textarea id="eventDescription" rows="4" placeholder="EVENT DESCRIPTION." required></textarea>
+        </label>
+
+        <button class="btn primary" type="submit">Save Event</button>
+        <button class="btn admin-cancel" type="button" id="cancelEdit">Cancel Edit</button>
+      </form>
+
+      <div class="admin-list">
+        <h2>Current Events</h2>
+        <div id="eventsAdminList" class="event-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="manage-events.js"></script>
+</body>
+</html>
