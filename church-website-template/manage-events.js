@@ -5,6 +5,7 @@ const eventTitle = document.getElementById("eventTitle");
 const eventDescription = document.getElementById("eventDescription");
 const eventsAdminList = document.getElementById("eventsAdminList");
 const cancelEdit = document.getElementById("cancelEdit");
+const eventSortDate = document.getElementById("eventSortDate");
 
 async function loadEvents() {
   const response = await fetch("/api/events");
@@ -49,9 +50,10 @@ function escapeForJs(value) {
     .replace(/\r/g, "");
 }
 
-function editEvent(id, date, title, description) {
+function editEvent(id, date, sortDate, title, description) {
   eventId.value = id;
   eventDate.value = date;
+  eventSortDate.value = sortDate;
   eventTitle.value = title;
   eventDescription.value = description;
 
@@ -65,11 +67,12 @@ eventForm.addEventListener("submit", async e => {
   e.preventDefault();
 
   const payload = {
-    id: eventId.value,
-    event_date: eventDate.value,
-    title: eventTitle.value,
-    description: eventDescription.value
-  };
+  id: eventId.value,
+  event_date: eventDate.value,
+  event_sort_date: eventSortDate.value,
+  title: eventTitle.value,
+  description: eventDescription.value
+};
 
   const isEditing = Boolean(eventId.value);
 
