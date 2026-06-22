@@ -1,6 +1,14 @@
 export async function onRequestGet(context) {
+  await context.env.DB
+    .prepare("DELETE FROM events WHERE event_sort_date IS NOT NULL AND event_sort_date < date('now')")
+    .run();
+
   const { results } = await context.env.DB
-    .prepare("SELECT * FROM events ORDER BY id DESC")
+    .prepare(`
+      SELECT *
+      FROM events
+      ORDER BY event_sort_date ASC, id ASC
+    `)
     .all();
 
   return Response.json(results);
@@ -11,10 +19,10 @@ export async function onRequestPost(context) {
 
   await context.env.DB
     .prepare(`
-      INSERT INTO events (event_date, title, description)
-      VALUES (?, ?, ?)
+      INSERT INTO events (event_date, event_sort_date, title, description)
+      VALUES (?, ?, ?, ?)
     `)
-    .bind(data.event_date, data.title, data.description)
+    .bind(data.event_date, data.event_sort_date, data.title, data.description)
     .run();
 
   return Response.json({ success: true });
@@ -26,10 +34,10 @@ export async function onRequestPut(context) {
   await context.env.DB
     .prepare(`
       UPDATE events
-      SET event_date = ?, title = ?, description = ?
+      SET event_date = ?, event_sort_date = ?, title = ?, description = ?
       WHERE id = ?
     `)
-    .bind(data.event_date, data.title, data.description, data.id)
+    .bind(data.event_date, data.event_sort_date, data.title, data.description, data.id)
     .run();
 
   return Response.json({ success: true });
