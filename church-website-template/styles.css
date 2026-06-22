@@ -77,7 +77,7 @@ body {
 
 .hero {
   background-image:
-    linear-gradient(rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0.52)),
+    linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
     url('images/church.jpg');
   background-size: cover;
   background-position: center;
