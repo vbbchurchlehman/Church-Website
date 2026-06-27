@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Sermons | Victory Baptist Bible Church</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="navbar">
+      <a href="admin.html" class="logo">Admin Dashboard</a>
+      <ul class="nav-links">
+        <li><a href="admin.html">Admin Home</a></li>
+        <li><a href="index.html">View Website</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section">
+      <p class="section-label">Admin</p>
+      <h1>Manage Sermons</h1>
+      <p>Add or remove sermon audio files.</p>
+
+      <form id="sermonForm" class="contact-form admin-form" enctype="multipart/form-data">
+        <label>
+          Sermon Title
+          <input type="text" id="sermonTitle" name="sermon_title" required />
+        </label>
+
+        <label>
+          Sermon Date
+          <input type="date" id="sermonDate" name="sermon_date" required />
+        </label>
+
+        <label>
+          Speaker
+          <input type="text" id="speaker" name="speaker" required />
+        </label>
+
+        <label>
+          Service
+          <select id="service" name="service" required>
+            <option value="">Select a service</option>
+            <option value="Sunday School">Sunday School</option>
+            <option value="Sunday Morning">Sunday Morning</option>
+            <option value="Sunday Afternoon">Sunday Afternoon</option>
+            <option value="Wednesday Bible Study">Wednesday Bible Study</option>
+            <option value="Special Service">Special Service</option>
+          </select>
+        </label>
+
+        <label>
+          Sermon MP3
+          <input type="file" id="mp3File" name="mp3_file" accept="audio/mpeg,audio/mp3" required />
+        </label>
+
+        <button class="btn primary" type="submit">Save Sermon</button>
+      </form>
+
+      <div class="admin-list">
+        <h2>Current Sermons</h2>
+        <div id="sermonsAdminList" class="sermon-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="manage-sermons.js"></script>
+</body>
+</html>
