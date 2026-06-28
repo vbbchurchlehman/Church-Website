@@ -28,7 +28,13 @@ async function loadEvents() {
     item.className = "event-item";
 
     item.innerHTML = `
-      ${event.image_url ? `<img class="event-image" src="${event.image_url}" alt="${event.title}">` : ""}
+      ${event.image_url ? `
+        <img
+          class="event-image"
+          src="${event.image_url}"
+          alt="${event.title}"
+          onclick="openImage('${event.image_url}')">
+        ` : ""}
       <span class="event-date">${event.event_date}</span>
       <div>
         <h3>${event.title}</h3>
