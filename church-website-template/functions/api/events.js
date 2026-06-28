@@ -9,9 +9,9 @@ export async function onRequestGet(context) {
 
   const { results } = await context.env.DB
     .prepare(`
-      SELECT id, event_date, event_sort_date, title, description, image_url, created_at
+      SELECT id, event_date, event_sort_date, event_time, title, description, image_url, created_at
       FROM events
-      ORDER BY event_sort_date ASC, id ASC
+      ORDER BY event_sort_date ASC, event_time ASC, id ASC
     `)
     .all();
 
@@ -24,6 +24,7 @@ export async function onRequestPost(context) {
 
     const eventDate = formData.get("event_date");
     const eventSortDate = formData.get("event_sort_date");
+    const eventTime = formData.get("event_time");
     const title = formData.get("title");
     const description = formData.get("description");
     const imageFile = formData.get("event_image");
@@ -44,10 +45,10 @@ export async function onRequestPost(context) {
 
     await context.env.DB
       .prepare(`
-        INSERT INTO events (event_date, event_sort_date, title, description, image_url)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO events (event_date, event_sort_date, event_time, title, description, image_url)
+        VALUES (?, ?, ?, ?, ?, ?)
       `)
-      .bind(eventDate, eventSortDate, title, description, imageUrl)
+      .bind(eventDate, eventSortDate, eventTime, title, description, imageUrl)
       .run();
 
     return Response.json({ success: true });
@@ -63,6 +64,7 @@ export async function onRequestPut(context) {
     const id = formData.get("id");
     const eventDate = formData.get("event_date");
     const eventSortDate = formData.get("event_sort_date");
+    const eventTime = formData.get("event_time");
     const title = formData.get("title");
     const description = formData.get("description");
     const imageFile = formData.get("event_image");
@@ -77,6 +79,7 @@ export async function onRequestPut(context) {
     if (imageFile && imageFile.name) {
       if (imageUrl) {
         const oldFileName = imageUrl.split("file=")[1];
+
         if (oldFileName) {
           await context.env.EVENT_IMAGES_BUCKET.delete(decodeURIComponent(oldFileName));
         }
@@ -96,10 +99,10 @@ export async function onRequestPut(context) {
     await context.env.DB
       .prepare(`
         UPDATE events
-        SET event_date = ?, event_sort_date = ?, title = ?, description = ?, image_url = ?
+        SET event_date = ?, event_sort_date = ?, event_time = ?, title = ?, description = ?, image_url = ?
         WHERE id = ?
       `)
-      .bind(eventDate, eventSortDate, title, description, imageUrl, id)
+      .bind(eventDate, eventSortDate, eventTime, title, description, imageUrl, id)
       .run();
 
     return Response.json({ success: true });
