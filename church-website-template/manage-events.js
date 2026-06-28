@@ -1,6 +1,7 @@
 const eventForm = document.getElementById("eventForm");
 const eventId = document.getElementById("eventId");
 const eventSortDate = document.getElementById("eventSortDate");
+const eventTime = document.getElementById("eventTime");
 const eventTitle = document.getElementById("eventTitle");
 const eventDescription = document.getElementById("eventDescription");
 const eventImage = document.getElementById("eventImage");
@@ -17,6 +18,17 @@ function formatDisplayDate(sortDate) {
   });
 }
 
+function formatTime(time) {
+  if (!time) return "";
+
+  const [hours, minutes] = time.split(":");
+
+  return new Date(2000, 0, 1, hours, minutes).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit"
+  });
+}
+
 async function loadEvents() {
   const response = await fetch("/api/events");
   const events = await response.json();
@@ -28,14 +40,21 @@ async function loadEvents() {
     item.className = "event-item";
 
     item.innerHTML = `
-      ${event.image_url ? `
-        <img
-          class="event-image"
-          src="${event.image_url}"
-          alt="${event.title}"
-          onclick="openImage('${event.image_url}')">
-        ` : ""}
-      <span class="event-date">${event.event_date}</span>
+      ${
+        event.image_url
+          ? `<img class="event-image" src="${event.image_url}" alt="${event.title}" onclick="openImage('${event.image_url}')">`
+          : ""
+      }
+
+      <div class="event-date-group">
+        <span class="event-date">${event.event_date}</span>
+        ${
+          event.event_time
+            ? `<span class="event-time">${formatTime(event.event_time)}</span>`
+            : ""
+        }
+      </div>
+
       <div>
         <h3>${event.title}</h3>
         <p>${event.description}</p>
@@ -59,6 +78,7 @@ async function loadEvents() {
 function editEvent(event) {
   eventId.value = event.id;
   eventSortDate.value = event.event_sort_date;
+  eventTime.value = event.event_time || "";
   eventTitle.value = event.title;
   eventDescription.value = event.description;
   eventImage.value = "";
@@ -77,6 +97,7 @@ eventForm.addEventListener("submit", async e => {
   formData.append("id", eventId.value);
   formData.append("event_date", formatDisplayDate(eventSortDate.value));
   formData.append("event_sort_date", eventSortDate.value);
+  formData.append("event_time", eventTime.value);
   formData.append("title", eventTitle.value);
   formData.append("description", eventDescription.value);
 
@@ -125,4 +146,6 @@ async function deleteEvent(id) {
   await loadEvents();
 }
 
-loadEvents();
+if (eventForm) {
+  loadEvents();
+}
