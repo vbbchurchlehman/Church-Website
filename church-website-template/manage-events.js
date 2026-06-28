@@ -3,6 +3,7 @@ const eventId = document.getElementById("eventId");
 const eventSortDate = document.getElementById("eventSortDate");
 const eventTitle = document.getElementById("eventTitle");
 const eventDescription = document.getElementById("eventDescription");
+const eventImage = document.getElementById("eventImage");
 const eventsAdminList = document.getElementById("eventsAdminList");
 const cancelEdit = document.getElementById("cancelEdit");
 
@@ -27,6 +28,7 @@ async function loadEvents() {
     item.className = "event-item";
 
     item.innerHTML = `
+      ${event.image_url ? `<img class="event-image" src="${event.image_url}" alt="${event.title}">` : ""}
       <span class="event-date">${event.event_date}</span>
       <div>
         <h3>${event.title}</h3>
@@ -41,13 +43,8 @@ async function loadEvents() {
 
     const buttons = item.querySelectorAll("button");
 
-    buttons[0].addEventListener("click", () => {
-      editEvent(event);
-    });
-
-    buttons[1].addEventListener("click", () => {
-      deleteEvent(event.id);
-    });
+    buttons[0].addEventListener("click", () => editEvent(event));
+    buttons[1].addEventListener("click", () => deleteEvent(event.id));
 
     eventsAdminList.appendChild(item);
   });
@@ -58,6 +55,7 @@ function editEvent(event) {
   eventSortDate.value = event.event_sort_date;
   eventTitle.value = event.title;
   eventDescription.value = event.description;
+  eventImage.value = "";
 
   window.scrollTo({
     top: eventForm.offsetTop - 100,
@@ -68,28 +66,28 @@ function editEvent(event) {
 eventForm.addEventListener("submit", async e => {
   e.preventDefault();
 
-  const payload = {
-    id: eventId.value,
-    event_date: formatDisplayDate(eventSortDate.value),
-    event_sort_date: eventSortDate.value,
-    title: eventTitle.value,
-    description: eventDescription.value
-  };
+  const formData = new FormData();
+
+  formData.append("id", eventId.value);
+  formData.append("event_date", formatDisplayDate(eventSortDate.value));
+  formData.append("event_sort_date", eventSortDate.value);
+  formData.append("title", eventTitle.value);
+  formData.append("description", eventDescription.value);
+
+  if (eventImage.files.length > 0) {
+    formData.append("event_image", eventImage.files[0]);
+  }
 
   const isEditing = Boolean(eventId.value);
 
   const response = await fetch("/api/events", {
     method: isEditing ? "PUT" : "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
+    body: formData
   });
 
-  const resultText = await response.text();
-
   if (!response.ok) {
-    alert("Event did not save: " + resultText);
+    const errorText = await response.text();
+    alert("Event did not save: " + errorText);
     return;
   }
 
