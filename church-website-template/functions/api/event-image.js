@@ -1,0 +1,21 @@
+export async function onRequestGet(context) {
+  const url = new URL(context.request.url);
+  const fileName = url.searchParams.get("file");
+
+  if (!fileName) {
+    return new Response("Missing file.", { status: 400 });
+  }
+
+  const object = await context.env.EVENT_IMAGES_BUCKET.get(fileName);
+
+  if (!object) {
+    return new Response("Image not found.", { status: 404 });
+  }
+
+  return new Response(object.body, {
+    headers: {
+      "Content-Type": object.httpMetadata?.contentType || "image/jpeg",
+      "Cache-Control": "public, max-age=86400"
+    }
+  });
+}
