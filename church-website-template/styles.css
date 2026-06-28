@@ -250,6 +250,13 @@ h2 {
   height: 110px;
   object-fit: cover;
   border-radius: 14px;
+  flex-shrink: 0;
+  cursor: zoom-in;
+  transition: transform 0.25s ease;
+}
+
+.event-image:hover {
+  transform: scale(1.03);
 }
 
 .sermon-list {
@@ -264,6 +271,7 @@ h2 {
   justify-content: space-between;
   align-items: center;
 }
+
 .faq-list {
   display: grid;
   gap: 1rem;
@@ -305,6 +313,7 @@ h2 {
   margin-bottom: 0;
   color: var(--muted);
 }
+
 .social-links {
   margin-bottom: 30px;
 }
@@ -319,6 +328,7 @@ h2 {
 .facebook-link:hover {
   transform: scale(1.1);
 }
+
 .section-actions {
   text-align: center;
   margin-top: 2rem;
@@ -390,7 +400,8 @@ label {
 }
 
 input,
-textarea {
+textarea,
+select {
   width: 100%;
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -403,6 +414,46 @@ textarea {
   padding: 2rem 1rem;
   background: var(--primary-dark);
   color: var(--white);
+}
+
+/* ---------- Image Lightbox ---------- */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.25s ease;
+  z-index: 9999;
+  padding: 1.5rem;
+}
+
+.lightbox.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox-image {
+  max-width: 94vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 32px;
+  font-size: 48px;
+  color: white;
+  cursor: pointer;
+  user-select: none;
+  line-height: 1;
 }
 
 @media (max-width: 900px) {
@@ -443,6 +494,15 @@ textarea {
     align-items: flex-start;
   }
 
+  .event-date {
+    min-width: 140px;
+  }
+
+  .event-image {
+    width: 100%;
+    height: auto;
+    max-height: 260px;
+  }
 
   .hero {
     min-height: 65vh;
