@@ -4,6 +4,10 @@ export async function onRequestGet(context) {
       DELETE FROM events
       WHERE event_sort_date IS NOT NULL
       AND event_sort_date < date('now')
+      AND (
+        recurrence_type IS NULL
+        OR recurrence_type = ''
+      )
     `)
     .run();
 
@@ -15,6 +19,8 @@ export async function onRequestGet(context) {
         event_sort_date,
         event_end_date,
         event_time,
+        recurrence_type,
+        recurrence_weekday,
         title,
         description,
         image_url,
@@ -35,6 +41,8 @@ export async function onRequestPost(context) {
     const eventSortDate = formData.get("event_sort_date");
     const eventEndDate = formData.get("event_end_date") || "";
     const eventTime = formData.get("event_time") || "";
+    const recurrenceType = formData.get("recurrence_type") || "";
+    const recurrenceWeekday = formData.get("recurrence_weekday") || "";
     const title = formData.get("title");
     const description = formData.get("description");
     const imageFile = formData.get("event_image");
@@ -60,17 +68,21 @@ export async function onRequestPost(context) {
           event_sort_date,
           event_end_date,
           event_time,
+          recurrence_type,
+          recurrence_weekday,
           title,
           description,
           image_url
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `)
       .bind(
         eventDate,
         eventSortDate,
         eventEndDate,
         eventTime,
+        recurrenceType,
+        recurrenceWeekday,
         title,
         description,
         imageUrl
@@ -95,6 +107,8 @@ export async function onRequestPut(context) {
     const eventSortDate = formData.get("event_sort_date");
     const eventEndDate = formData.get("event_end_date") || "";
     const eventTime = formData.get("event_time") || "";
+    const recurrenceType = formData.get("recurrence_type") || "";
+    const recurrenceWeekday = formData.get("recurrence_weekday") || "";
     const title = formData.get("title");
     const description = formData.get("description");
     const imageFile = formData.get("event_image");
@@ -136,6 +150,8 @@ export async function onRequestPut(context) {
           event_sort_date = ?,
           event_end_date = ?,
           event_time = ?,
+          recurrence_type = ?,
+          recurrence_weekday = ?,
           title = ?,
           description = ?,
           image_url = ?
@@ -146,6 +162,8 @@ export async function onRequestPut(context) {
         eventSortDate,
         eventEndDate,
         eventTime,
+        recurrenceType,
+        recurrenceWeekday,
         title,
         description,
         imageUrl,
