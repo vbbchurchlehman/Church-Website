@@ -1,6 +1,7 @@
 const eventForm = document.getElementById("eventForm");
 const eventId = document.getElementById("eventId");
 const eventSortDate = document.getElementById("eventSortDate");
+const eventEndDate = document.getElementById("eventEndDate");
 const eventTime = document.getElementById("eventTime");
 const eventTitle = document.getElementById("eventTitle");
 const eventDescription = document.getElementById("eventDescription");
@@ -9,6 +10,8 @@ const eventsAdminList = document.getElementById("eventsAdminList");
 const cancelEdit = document.getElementById("cancelEdit");
 
 function formatDisplayDate(sortDate) {
+  if (!sortDate) return "";
+
   const [year, month, day] = sortDate.split("-");
   const date = new Date(Number(year), Number(month) - 1, Number(day));
 
@@ -29,6 +32,24 @@ function formatTime(time) {
   });
 }
 
+function eventDateHtml(event) {
+  return `
+    <div class="event-date-group">
+      <span class="event-date">${event.event_date}${event.event_end_date ? " -" : ""}</span>
+      ${
+        event.event_end_date
+          ? `<span class="event-date">${formatDisplayDate(event.event_end_date)}</span>`
+          : ""
+      }
+      ${
+        event.event_time
+          ? `<span class="event-time">${formatTime(event.event_time)}</span>`
+          : ""
+      }
+    </div>
+  `;
+}
+
 async function loadEvents() {
   const response = await fetch("/api/events");
   const events = await response.json();
@@ -46,14 +67,7 @@ async function loadEvents() {
           : ""
       }
 
-      <div class="event-date-group">
-        <span class="event-date">${event.event_date}</span>
-        ${
-          event.event_time
-            ? `<span class="event-time">${formatTime(event.event_time)}</span>`
-            : ""
-        }
-      </div>
+      ${eventDateHtml(event)}
 
       <div>
         <h3>${event.title}</h3>
@@ -78,6 +92,7 @@ async function loadEvents() {
 function editEvent(event) {
   eventId.value = event.id;
   eventSortDate.value = event.event_sort_date;
+  eventEndDate.value = event.event_end_date || "";
   eventTime.value = event.event_time || "";
   eventTitle.value = event.title;
   eventDescription.value = event.description;
@@ -97,6 +112,7 @@ eventForm.addEventListener("submit", async e => {
   formData.append("id", eventId.value);
   formData.append("event_date", formatDisplayDate(eventSortDate.value));
   formData.append("event_sort_date", eventSortDate.value);
+  formData.append("event_end_date", eventEndDate.value);
   formData.append("event_time", eventTime.value);
   formData.append("title", eventTitle.value);
   formData.append("description", eventDescription.value);
