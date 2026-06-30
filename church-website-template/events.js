@@ -7,9 +7,21 @@ function getDateParts(sortDate) {
   const date = new Date(Number(year), Number(month) - 1, Number(day));
 
   return {
+    date,
+    year: Number(year),
+    monthIndex: Number(month) - 1,
+    dayNumber: Number(day),
     month: date.toLocaleDateString("en-US", { month: "long" }),
-    day: date.toLocaleDateString("en-US", { day: "numeric" })
+    day: date.toLocaleDateString("en-US", { day: "numeric" }),
+    weekday: date.toLocaleDateString("en-US", { weekday: "long" })
   };
+}
+
+function formatDateInput(date) {
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const dd = String(date.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
 }
 
 function formatTime(time) {
@@ -20,6 +32,48 @@ function formatTime(time) {
   return new Date(2000, 0, 1, hours, minutes).toLocaleTimeString("en-US", {
     hour: "numeric",
     minute: "2-digit"
+  });
+}
+
+function expandRecurringEvents(events) {
+  const expanded = [];
+
+  events.forEach(event => {
+    if (event.recurrence_type !== "weekly_in_range") {
+      expanded.push(event);
+      return;
+    }
+
+    const start = getDateParts(event.event_sort_date);
+    const end = getDateParts(event.event_end_date);
+    const targetWeekday = Number(event.recurrence_weekday);
+
+    if (!start || !end || Number.isNaN(targetWeekday)) {
+      expanded.push(event);
+      return;
+    }
+
+    const current = new Date(start.year, start.monthIndex, start.dayNumber);
+    const finalDate = new Date(end.year, end.monthIndex, end.dayNumber);
+
+    while (current <= finalDate) {
+      if (current.getDay() === targetWeekday) {
+        expanded.push({
+          ...event,
+          event_sort_date: formatDateInput(current),
+          event_date: `${current.toLocaleDateString("en-US", { month: "long" })} ${current.getDate()}`,
+          event_end_date: ""
+        });
+      }
+
+      current.setDate(current.getDate() + 1);
+    }
+  });
+
+  return expanded.sort((a, b) => {
+    const dateCompare = String(a.event_sort_date).localeCompare(String(b.event_sort_date));
+    if (dateCompare !== 0) return dateCompare;
+    return String(a.event_time || "").localeCompare(String(b.event_time || ""));
   });
 }
 
@@ -50,13 +104,14 @@ function eventDateHtml(event) {
     <div class="event-date-group">
       ${dateHtml}
       ${event.event_time ? `<span class="event-time">${formatTime(event.event_time)}</span>` : ""}
+      <span class="event-weekday">${start.weekday}</span>
     </div>
   `;
 }
 
 async function loadPublicEvents() {
   const response = await fetch("/api/events");
-  const events = await response.json();
+  const events = expandRecurringEvents(await response.json());
 
   publicEventsList.innerHTML = "";
 
