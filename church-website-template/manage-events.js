@@ -85,11 +85,23 @@ function recurrenceLabel(event) {
     "Saturday"
   ];
 
+  const start = getDateParts(event.event_sort_date);
+  const end = getDateParts(event.event_end_date);
+
+  const startText = start
+    ? `${start.month} ${start.day}`
+    : "Start Date";
+
+  const endText = end
+    ? `${end.month} ${end.day}`
+    : "End Date";
+
   return `
     <p>
       <strong>Repeats:</strong>
-      Every ${weekdayNames[Number(event.recurrence_weekday)] || "selected weekday"}
-      between the start and end date
+      Every ${weekdayNames[Number(event.recurrence_weekday)]}
+      from <strong>${startText}</strong>
+      through <strong>${endText}</strong>
     </p>
   `;
 }
