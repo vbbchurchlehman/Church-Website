@@ -1,16 +1,4 @@
 export async function onRequestGet(context) {
-  await context.env.DB
-    .prepare(`
-      DELETE FROM events
-      WHERE event_sort_date IS NOT NULL
-      AND event_sort_date < date('now')
-      AND (
-        recurrence_type IS NULL
-        OR recurrence_type = ''
-      )
-    `)
-    .run();
-
   const { results } = await context.env.DB
     .prepare(`
       SELECT
@@ -91,10 +79,7 @@ export async function onRequestPost(context) {
 
     return Response.json({ success: true });
   } catch (error) {
-    return Response.json(
-      { success: false, error: String(error) },
-      { status: 500 }
-    );
+    return Response.json({ success: false, error: String(error) }, { status: 500 });
   }
 }
 
@@ -125,9 +110,7 @@ export async function onRequestPut(context) {
         const oldFileName = imageUrl.split("file=")[1];
 
         if (oldFileName) {
-          await context.env.EVENT_IMAGES_BUCKET.delete(
-            decodeURIComponent(oldFileName)
-          );
+          await context.env.EVENT_IMAGES_BUCKET.delete(decodeURIComponent(oldFileName));
         }
       }
 
@@ -173,10 +156,7 @@ export async function onRequestPut(context) {
 
     return Response.json({ success: true });
   } catch (error) {
-    return Response.json(
-      { success: false, error: String(error) },
-      { status: 500 }
-    );
+    return Response.json({ success: false, error: String(error) }, { status: 500 });
   }
 }
 
@@ -193,9 +173,7 @@ export async function onRequestDelete(context) {
     const fileName = event.image_url.split("file=")[1];
 
     if (fileName) {
-      await context.env.EVENT_IMAGES_BUCKET.delete(
-        decodeURIComponent(fileName)
-      );
+      await context.env.EVENT_IMAGES_BUCKET.delete(decodeURIComponent(fileName));
     }
   }
 
