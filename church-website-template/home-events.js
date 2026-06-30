@@ -1,5 +1,17 @@
 const homeEventsList = document.getElementById("homeEventsList");
 
+function formatDisplayDate(sortDate) {
+  if (!sortDate) return "";
+
+  const [year, month, day] = sortDate.split("-");
+  const date = new Date(Number(year), Number(month) - 1, Number(day));
+
+  return date.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric"
+  });
+}
+
 function formatTime(time) {
   if (!time) return "";
 
@@ -9,6 +21,24 @@ function formatTime(time) {
     hour: "numeric",
     minute: "2-digit"
   });
+}
+
+function eventDateHtml(event) {
+  return `
+    <div class="event-date-group">
+      <span class="event-date">${event.event_date}${event.event_end_date ? " -" : ""}</span>
+      ${
+        event.event_end_date
+          ? `<span class="event-date">${formatDisplayDate(event.event_end_date)}</span>`
+          : ""
+      }
+      ${
+        event.event_time
+          ? `<span class="event-time">${formatTime(event.event_time)}</span>`
+          : ""
+      }
+    </div>
+  `;
 }
 
 async function loadHomeEvents() {
@@ -41,14 +71,7 @@ async function loadHomeEvents() {
             : ""
         }
 
-        <div class="event-date-group">
-          <span class="event-date">${event.event_date}</span>
-          ${
-            event.event_time
-              ? `<span class="event-time">${formatTime(event.event_time)}</span>`
-              : ""
-          }
-        </div>
+        ${eventDateHtml(event)}
 
         <div>
           <h3>${event.title}</h3>
