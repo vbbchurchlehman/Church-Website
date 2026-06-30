@@ -45,12 +45,12 @@ function eventDateHtml(event) {
   const end = getDateParts(event.event_end_date);
 
   if (!start) {
-  return `
-    <div class="event-date-group">
-      ${dateHtml}
-      ${event.event_time ? `<span class="event-time">${formatTime(event.event_time)}</span>` : ""}
-    </div>
-  `;
+    return `
+      <div class="event-date-group">
+        <span class="event-date">Soon</span>
+      </div>
+    `;
+  }
 
   let dateHtml = "";
 
@@ -67,7 +67,6 @@ function eventDateHtml(event) {
     <div class="event-date-group">
       ${dateHtml}
       ${event.event_time ? `<span class="event-time">${formatTime(event.event_time)}</span>` : ""}
-      <span class="event-weekday">${start.weekday}</span>
     </div>
   `;
 }
