@@ -3,6 +3,8 @@ const eventId = document.getElementById("eventId");
 const eventSortDate = document.getElementById("eventSortDate");
 const eventEndDate = document.getElementById("eventEndDate");
 const eventTime = document.getElementById("eventTime");
+const recurrenceType = document.getElementById("recurrenceType");
+const recurrenceWeekday = document.getElementById("recurrenceWeekday");
 const eventTitle = document.getElementById("eventTitle");
 const eventDescription = document.getElementById("eventDescription");
 const eventImage = document.getElementById("eventImage");
@@ -17,7 +19,8 @@ function getDateParts(sortDate) {
 
   return {
     month: date.toLocaleDateString("en-US", { month: "long" }),
-    day: date.toLocaleDateString("en-US", { day: "numeric" })
+    day: date.toLocaleDateString("en-US", { day: "numeric" }),
+    weekday: date.toLocaleDateString("en-US", { weekday: "long" })
   };
 }
 
@@ -64,7 +67,30 @@ function eventDateHtml(event) {
     <div class="event-date-group">
       ${dateHtml}
       ${event.event_time ? `<span class="event-time">${formatTime(event.event_time)}</span>` : ""}
+      <span class="event-weekday">${start.weekday}</span>
     </div>
+  `;
+}
+
+function recurrenceLabel(event) {
+  if (event.recurrence_type !== "weekly_in_range") return "";
+
+  const weekdayNames = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday"
+  ];
+
+  return `
+    <p>
+      <strong>Repeats:</strong>
+      Every ${weekdayNames[Number(event.recurrence_weekday)] || "selected weekday"}
+      between the start and end date
+    </p>
   `;
 }
 
@@ -79,11 +105,19 @@ async function loadEvents() {
     item.className = "event-item";
 
     item.innerHTML = `
-      ${event.image_url ? `<img class="event-image" src="${event.image_url}" alt="${event.title}" onclick="openImage('${event.image_url}')">` : ""}
+      ${
+        event.image_url
+          ? `<img class="event-image" src="${event.image_url}" alt="${event.title}" onclick="openImage('${event.image_url}')">`
+          : ""
+      }
+
       ${eventDateHtml(event)}
+
       <div>
         <h3>${event.title}</h3>
+        ${recurrenceLabel(event)}
         <p>${event.description}</p>
+
         <div class="admin-actions">
           <button class="btn primary" type="button">Edit</button>
           <button class="btn danger" type="button">Delete</button>
@@ -102,11 +136,13 @@ async function loadEvents() {
 
 function editEvent(event) {
   eventId.value = event.id;
-  eventSortDate.value = event.event_sort_date;
+  eventSortDate.value = event.event_sort_date || "";
   eventEndDate.value = event.event_end_date || "";
   eventTime.value = event.event_time || "";
-  eventTitle.value = event.title;
-  eventDescription.value = event.description;
+  recurrenceType.value = event.recurrence_type || "";
+  recurrenceWeekday.value = event.recurrence_weekday || "";
+  eventTitle.value = event.title || "";
+  eventDescription.value = event.description || "";
   eventImage.value = "";
 
   window.scrollTo({
@@ -118,6 +154,16 @@ function editEvent(event) {
 eventForm.addEventListener("submit", async e => {
   e.preventDefault();
 
+  if (recurrenceType.value === "weekly_in_range" && !eventEndDate.value) {
+    alert("Please choose an End Date for recurring events.");
+    return;
+  }
+
+  if (recurrenceType.value === "weekly_in_range" && recurrenceWeekday.value === "") {
+    alert("Please choose a Repeat Weekday for recurring events.");
+    return;
+  }
+
   const formData = new FormData();
 
   formData.append("id", eventId.value);
@@ -125,6 +171,8 @@ eventForm.addEventListener("submit", async e => {
   formData.append("event_sort_date", eventSortDate.value);
   formData.append("event_end_date", eventEndDate.value);
   formData.append("event_time", eventTime.value);
+  formData.append("recurrence_type", recurrenceType.value);
+  formData.append("recurrence_weekday", recurrenceWeekday.value);
   formData.append("title", eventTitle.value);
   formData.append("description", eventDescription.value);
 
