@@ -3,6 +3,7 @@ const eventId = document.getElementById("eventId");
 const eventSortDate = document.getElementById("eventSortDate");
 const eventEndDate = document.getElementById("eventEndDate");
 const eventTime = document.getElementById("eventTime");
+const eventEndTime = document.getElementById("eventEndTime");
 const recurrenceType = document.getElementById("recurrenceType");
 const recurrenceWeekday = document.getElementById("recurrenceWeekday");
 const eventTitle = document.getElementById("eventTitle");
@@ -18,6 +19,10 @@ function getDateParts(sortDate) {
   const date = new Date(Number(year), Number(month) - 1, Number(day));
 
   return {
+    date,
+    year: Number(year),
+    monthIndex: Number(month) - 1,
+    dayNumber: Number(day),
     month: date.toLocaleDateString("en-US", { month: "long" }),
     day: date.toLocaleDateString("en-US", { day: "numeric" }),
     weekday: date.toLocaleDateString("en-US", { weekday: "long" })
@@ -34,10 +39,20 @@ function formatTime(time) {
 
   const [hours, minutes] = time.split(":");
 
-  return new Date(2000, 0, 1, hours, minutes).toLocaleTimeString("en-US", {
+  return new Date(2000, 0, 1, Number(hours), Number(minutes)).toLocaleTimeString("en-US", {
     hour: "numeric",
     minute: "2-digit"
   });
+}
+
+function formatTimeRange(start, end) {
+  if (!start) return "";
+
+  if (!end) {
+    return formatTime(start);
+  }
+
+  return `${formatTime(start)} - ${formatTime(end)}`;
 }
 
 function eventDateHtml(event) {
@@ -55,7 +70,9 @@ function eventDateHtml(event) {
   let dateHtml = "";
 
   if (end && start.month === end.month) {
-    dateHtml = `<span class="event-date">${start.month} ${start.day}-${end.day}</span>`;
+    dateHtml = `
+      <span class="event-date">${start.month} ${start.day}-${end.day}</span>
+    `;
   } else {
     dateHtml = `
       <span class="event-date">${start.month} ${start.day}${end ? " -" : ""}</span>
@@ -66,7 +83,11 @@ function eventDateHtml(event) {
   return `
     <div class="event-date-group">
       ${dateHtml}
-      ${event.event_time ? `<span class="event-time">${formatTime(event.event_time)}</span>` : ""}
+      ${
+        event.event_time
+          ? `<span class="event-time">${formatTimeRange(event.event_time, event.event_end_time)}</span>`
+          : ""
+      }
     </div>
   `;
 }
@@ -76,6 +97,8 @@ function recurrenceLabel(event) {
 
   const start = getDateParts(event.event_sort_date);
   const end = getDateParts(event.event_end_date);
+
+  if (!start || !end) return "";
 
   return `
     <p>
@@ -128,12 +151,13 @@ async function loadEvents() {
 }
 
 function editEvent(event) {
-  eventId.value = event.id;
+  eventId.value = event.id || "";
   eventSortDate.value = event.event_sort_date || "";
   eventEndDate.value = event.event_end_date || "";
   eventTime.value = event.event_time || "";
+  eventEndTime.value = event.event_end_time || "";
   recurrenceType.value = event.recurrence_type || "";
-  recurrenceWeekday.value = event.recurrence_weekday || "";
+  recurrenceWeekday.value = event.recurrence_weekday ?? "";
   eventTitle.value = event.title || "";
   eventDescription.value = event.description || "";
   eventImage.value = "";
@@ -164,6 +188,7 @@ eventForm.addEventListener("submit", async e => {
   formData.append("event_sort_date", eventSortDate.value);
   formData.append("event_end_date", eventEndDate.value);
   formData.append("event_time", eventTime.value);
+  formData.append("event_end_time", eventEndTime.value);
   formData.append("recurrence_type", recurrenceType.value);
   formData.append("recurrence_weekday", recurrenceWeekday.value);
   formData.append("title", eventTitle.value);
