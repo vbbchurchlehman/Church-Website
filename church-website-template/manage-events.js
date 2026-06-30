@@ -45,12 +45,12 @@ function eventDateHtml(event) {
   const end = getDateParts(event.event_end_date);
 
   if (!start) {
-    return `
-      <div class="event-date-group">
-        <span class="event-date">Soon</span>
-      </div>
-    `;
-  }
+  return `
+    <div class="event-date-group">
+      ${dateHtml}
+      ${event.event_time ? `<span class="event-time">${formatTime(event.event_time)}</span>` : ""}
+    </div>
+  `;
 
   let dateHtml = "";
 
@@ -75,33 +75,15 @@ function eventDateHtml(event) {
 function recurrenceLabel(event) {
   if (event.recurrence_type !== "weekly_in_range") return "";
 
-  const weekdayNames = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday"
-  ];
-
   const start = getDateParts(event.event_sort_date);
   const end = getDateParts(event.event_end_date);
-
-  const startText = start
-    ? `${start.month} ${start.day}`
-    : "Start Date";
-
-  const endText = end
-    ? `${end.month} ${end.day}`
-    : "End Date";
 
   return `
     <p>
       <strong>Repeats:</strong>
-      Every ${weekdayNames[Number(event.recurrence_weekday)]}
-      from <strong>${startText}</strong>
-      through <strong>${endText}</strong>
+      Every <strong>${start.weekday}</strong>
+      from <strong>${start.month} ${start.day}</strong>
+      through <strong>${end.month} ${end.day}</strong>
     </p>
   `;
 }
