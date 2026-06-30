@@ -241,7 +241,8 @@ h2 {
 }
 
 .event-date,
-.event-time {
+.event-time,
+.event-weekday {
   background: var(--primary);
   color: var(--white);
   border-radius: 12px;
@@ -252,7 +253,8 @@ h2 {
   white-space: nowrap;
 }
 
-.event-time {
+.event-time,
+.event-weekday {
   font-size: 0.9rem;
 }
 
