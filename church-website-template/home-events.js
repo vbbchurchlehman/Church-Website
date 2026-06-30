@@ -84,10 +84,10 @@ function eventDateHtml(event) {
   if (!start) {
     return `
       <div class="event-date-group">
-        ${dateHtml}
-        ${event.event_time ? `<span class="event-time">${formatTime(event.event_time)}</span>` : ""}
+        <span class="event-date">Soon</span>
       </div>
     `;
+  }
 
   let dateHtml = "";
 
@@ -104,7 +104,6 @@ function eventDateHtml(event) {
     <div class="event-date-group">
       ${dateHtml}
       ${event.event_time ? `<span class="event-time">${formatTime(event.event_time)}</span>` : ""}
-      <span class="event-weekday">${start.weekday}</span>
     </div>
   `;
 }
