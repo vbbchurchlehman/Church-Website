@@ -7,6 +7,7 @@ export async function onRequestGet(context) {
         event_sort_date,
         event_end_date,
         event_time,
+        event_end_time,
         recurrence_type,
         recurrence_weekday,
         title,
@@ -25,14 +26,15 @@ export async function onRequestPost(context) {
   try {
     const formData = await context.request.formData();
 
-    const eventDate = formData.get("event_date");
-    const eventSortDate = formData.get("event_sort_date");
+    const eventDate = formData.get("event_date") || "";
+    const eventSortDate = formData.get("event_sort_date") || "";
     const eventEndDate = formData.get("event_end_date") || "";
     const eventTime = formData.get("event_time") || "";
+    const eventEndTime = formData.get("event_end_time") || "";
     const recurrenceType = formData.get("recurrence_type") || "";
     const recurrenceWeekday = formData.get("recurrence_weekday") || "";
-    const title = formData.get("title");
-    const description = formData.get("description");
+    const title = formData.get("title") || "";
+    const description = formData.get("description") || "";
     const imageFile = formData.get("event_image");
 
     let imageUrl = "";
@@ -56,19 +58,21 @@ export async function onRequestPost(context) {
           event_sort_date,
           event_end_date,
           event_time,
+          event_end_time,
           recurrence_type,
           recurrence_weekday,
           title,
           description,
           image_url
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `)
       .bind(
         eventDate,
         eventSortDate,
         eventEndDate,
         eventTime,
+        eventEndTime,
         recurrenceType,
         recurrenceWeekday,
         title,
@@ -79,7 +83,10 @@ export async function onRequestPost(context) {
 
     return Response.json({ success: true });
   } catch (error) {
-    return Response.json({ success: false, error: String(error) }, { status: 500 });
+    return Response.json(
+      { success: false, error: String(error) },
+      { status: 500 }
+    );
   }
 }
 
@@ -88,14 +95,15 @@ export async function onRequestPut(context) {
     const formData = await context.request.formData();
 
     const id = formData.get("id");
-    const eventDate = formData.get("event_date");
-    const eventSortDate = formData.get("event_sort_date");
+    const eventDate = formData.get("event_date") || "";
+    const eventSortDate = formData.get("event_sort_date") || "";
     const eventEndDate = formData.get("event_end_date") || "";
     const eventTime = formData.get("event_time") || "";
+    const eventEndTime = formData.get("event_end_time") || "";
     const recurrenceType = formData.get("recurrence_type") || "";
     const recurrenceWeekday = formData.get("recurrence_weekday") || "";
-    const title = formData.get("title");
-    const description = formData.get("description");
+    const title = formData.get("title") || "";
+    const description = formData.get("description") || "";
     const imageFile = formData.get("event_image");
 
     const existingEvent = await context.env.DB
@@ -110,7 +118,9 @@ export async function onRequestPut(context) {
         const oldFileName = imageUrl.split("file=")[1];
 
         if (oldFileName) {
-          await context.env.EVENT_IMAGES_BUCKET.delete(decodeURIComponent(oldFileName));
+          await context.env.EVENT_IMAGES_BUCKET.delete(
+            decodeURIComponent(oldFileName)
+          );
         }
       }
 
@@ -133,6 +143,7 @@ export async function onRequestPut(context) {
           event_sort_date = ?,
           event_end_date = ?,
           event_time = ?,
+          event_end_time = ?,
           recurrence_type = ?,
           recurrence_weekday = ?,
           title = ?,
@@ -145,6 +156,7 @@ export async function onRequestPut(context) {
         eventSortDate,
         eventEndDate,
         eventTime,
+        eventEndTime,
         recurrenceType,
         recurrenceWeekday,
         title,
@@ -156,7 +168,10 @@ export async function onRequestPut(context) {
 
     return Response.json({ success: true });
   } catch (error) {
-    return Response.json({ success: false, error: String(error) }, { status: 500 });
+    return Response.json(
+      { success: false, error: String(error) },
+      { status: 500 }
+    );
   }
 }
 
@@ -173,7 +188,9 @@ export async function onRequestDelete(context) {
     const fileName = event.image_url.split("file=")[1];
 
     if (fileName) {
-      await context.env.EVENT_IMAGES_BUCKET.delete(decodeURIComponent(fileName));
+      await context.env.EVENT_IMAGES_BUCKET.delete(
+        decodeURIComponent(fileName)
+      );
     }
   }
 
