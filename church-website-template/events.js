@@ -30,10 +30,20 @@ function formatTime(time) {
 
   const [hours, minutes] = time.split(":");
 
-  return new Date(2000, 0, 1, hours, minutes).toLocaleTimeString("en-US", {
+  return new Date(2000, 0, 1, Number(hours), Number(minutes)).toLocaleTimeString("en-US", {
     hour: "numeric",
     minute: "2-digit"
   });
+}
+
+function formatTimeRange(start, end) {
+  if (!start) return "";
+
+  if (!end) {
+    return formatTime(start);
+  }
+
+  return `${formatTime(start)} - ${formatTime(end)}`;
 }
 
 function expandRecurringEvents(events) {
@@ -59,12 +69,13 @@ function expandRecurringEvents(events) {
 
     while (current <= finalDate) {
       if (current.getDay() === targetWeekday) {
-        const parts = getDateParts(formatDateInput(current));
+        const currentSortDate = formatDateInput(current);
+        const currentParts = getDateParts(currentSortDate);
 
         expanded.push({
           ...event,
-          event_sort_date: formatDateInput(current),
-          event_date: `${parts.month} ${parts.day}`,
+          event_sort_date: currentSortDate,
+          event_date: `${currentParts.month} ${currentParts.day}`,
           event_end_date: ""
         });
       }
@@ -112,7 +123,11 @@ function eventDateHtml(event) {
   return `
     <div class="event-date-group">
       ${dateHtml}
-      ${event.event_time ? `<span class="event-time">${formatTime(event.event_time)}</span>` : ""}
+      ${
+        event.event_time
+          ? `<span class="event-time">${formatTimeRange(event.event_time, event.event_end_time)}</span>`
+          : ""
+      }
     </div>
   `;
 }
