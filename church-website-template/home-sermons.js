@@ -19,7 +19,7 @@ async function loadHomeSermon() {
   homeSermonBox.innerHTML = `
     <div>
       <h3>${sermon.sermon_title}</h3>
-      <p>${sermon.speaker} · ${sermon.service} · ${formatSermonDate(sermon.sermon_date)}</p>
+      <p>${sermon.speaker} · ${sermon.service} · ${formatSermonDate(sermon.sermon_date)} · ${sermon.scripture_passage}</p>
       <audio controls src="${sermon.mp3_url}"></audio>
     </div>
   `;
