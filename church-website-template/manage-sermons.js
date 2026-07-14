@@ -14,7 +14,7 @@ async function loadSermons() {
     item.innerHTML = `
       <div>
         <h3>${sermon.sermon_title}</h3>
-        <p>${sermon.speaker} · ${sermon.service} · ${sermon.sermon_date}</p>
+        <p>${sermon.speaker} · ${sermon.service} · ${sermon.sermon_date} · ${sermon.scripture_passage}</p>
         <audio controls src="${sermon.mp3_url}"></audio>
         <div class="admin-actions">
           <button class="btn danger" type="button">Delete</button>
