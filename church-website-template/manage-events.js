@@ -1,244 +1,177 @@
-const eventForm = document.getElementById("eventForm");
-const eventId = document.getElementById("eventId");
-const eventSortDate = document.getElementById("eventSortDate");
-const eventEndDate = document.getElementById("eventEndDate");
-const eventTime = document.getElementById("eventTime");
-const eventEndTime = document.getElementById("eventEndTime");
-const recurrenceType = document.getElementById("recurrenceType");
-const recurrenceWeekday = document.getElementById("recurrenceWeekday");
-const eventTitle = document.getElementById("eventTitle");
-const eventDescription = document.getElementById("eventDescription");
-const eventImage = document.getElementById("eventImage");
-const eventsAdminList = document.getElementById("eventsAdminList");
+const sermonForm = document.getElementById("sermonForm");
+const sermonId = document.getElementById("sermonId");
+const sermonTitle = document.getElementById("sermonTitle");
+const sermonSpeaker = document.getElementById("sermonSpeaker");
+const sermonService = document.getElementById("sermonService");
+const sermonDate = document.getElementById("sermonDate");
+const scripturePassage = document.getElementById("scripturePassage");
+const sermonMp3 = document.getElementById("sermonMp3");
+const sermonsAdminList = document.getElementById("sermonsAdminList");
 const cancelEdit = document.getElementById("cancelEdit");
 
-function getDateParts(sortDate) {
-  if (!sortDate) return null;
+function formatSermonDate(dateValue) {
+  if (!dateValue) return "";
 
-  const [year, month, day] = sortDate.split("-");
+  const [year, month, day] = dateValue.split("-");
   const date = new Date(Number(year), Number(month) - 1, Number(day));
 
-  return {
-    date,
-    year: Number(year),
-    monthIndex: Number(month) - 1,
-    dayNumber: Number(day),
-    month: date.toLocaleDateString("en-US", { month: "long" }),
-    day: date.toLocaleDateString("en-US", { day: "numeric" }),
-    weekday: date.toLocaleDateString("en-US", { weekday: "long" })
-  };
-}
-
-function formatDisplayDate(sortDate) {
-  const parts = getDateParts(sortDate);
-  return parts ? `${parts.month} ${parts.day}` : "";
-}
-
-function formatTime(time) {
-  if (!time) return "";
-
-  const [hours, minutes] = time.split(":");
-
-  return new Date(2000, 0, 1, Number(hours), Number(minutes)).toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit"
+  return date.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric"
   });
 }
 
-function formatTimeRange(start, end) {
-  if (!start) return "";
+async function loadSermons() {
+  const response = await fetch("/api/sermons");
 
-  if (!end) {
-    return formatTime(start);
+  if (!response.ok) {
+    const errorText = await response.text();
+    alert("Sermons could not be loaded: " + errorText);
+    return;
   }
 
-  return `${formatTime(start)} - ${formatTime(end)}`;
-}
+  const sermons = await response.json();
 
-function eventDateHtml(event) {
-  const start = getDateParts(event.event_sort_date);
-  const end = getDateParts(event.event_end_date);
+  sermonsAdminList.innerHTML = "";
 
-  if (!start) {
-    return `
-      <div class="event-date-group">
-        <span class="event-date">Soon</span>
-      </div>
-    `;
-  }
-
-  let dateHtml = "";
-
-  if (end && start.month === end.month) {
-    dateHtml = `
-      <span class="event-date">${start.month} ${start.day}-${end.day}</span>
-    `;
-  } else {
-    dateHtml = `
-      <span class="event-date">${start.month} ${start.day}${end ? " -" : ""}</span>
-      ${end ? `<span class="event-date">${end.month} ${end.day}</span>` : ""}
-    `;
-  }
-
-  return `
-    <div class="event-date-group">
-      ${dateHtml}
-      ${
-        event.event_time
-          ? `<span class="event-time">${formatTimeRange(event.event_time, event.event_end_time)}</span>`
-          : ""
-      }
-    </div>
-  `;
-}
-
-function recurrenceLabel(event) {
-  if (event.recurrence_type !== "weekly_in_range") return "";
-
-  const start = getDateParts(event.event_sort_date);
-  const end = getDateParts(event.event_end_date);
-
-  if (!start || !end) return "";
-
-  return `
-    <p>
-      <strong>Repeats:</strong>
-      Every <strong>${start.weekday}</strong>
-      from <strong>${start.month} ${start.day}</strong>
-      through <strong>${end.month} ${end.day}</strong>
-    </p>
-  `;
-}
-
-async function loadEvents() {
-  const response = await fetch("/api/events");
-  const events = await response.json();
-
-  eventsAdminList.innerHTML = "";
-
-  events.forEach(event => {
+  sermons.forEach(sermon => {
     const item = document.createElement("div");
-    item.className = "event-item";
+    item.className = "sermon-box";
 
     item.innerHTML = `
-      ${
-        event.image_url
-          ? `<img class="event-image" src="${event.image_url}" alt="${event.title}" onclick="openImage('${event.image_url}')">`
-          : ""
-      }
-
-      ${eventDateHtml(event)}
-
       <div>
-        <h3>${event.title}</h3>
-        ${recurrenceLabel(event)}
-        <p>${event.description}</p>
+        <h3>${sermon.sermon_title || ""}</h3>
+
+        <p>
+          ${sermon.speaker || ""}
+          ${sermon.service ? ` · ${sermon.service}` : ""}
+          ${sermon.sermon_date ? ` · ${formatSermonDate(sermon.sermon_date)}` : ""}
+          ${sermon.scripture_passage ? ` · ${sermon.scripture_passage}` : ""}
+        </p>
+
+        ${
+          sermon.mp3_url
+            ? `<audio controls src="${sermon.mp3_url}"></audio>`
+            : ""
+        }
 
         <div class="admin-actions">
-          <button class="btn primary" type="button">Edit</button>
-          <button class="btn danger" type="button">Delete</button>
+          <button class="btn primary edit-sermon" type="button">
+            Edit
+          </button>
+
+          <button class="btn danger delete-sermon" type="button">
+            Delete
+          </button>
         </div>
       </div>
     `;
 
-    const buttons = item.querySelectorAll("button");
+    item
+      .querySelector(".edit-sermon")
+      .addEventListener("click", () => editSermon(sermon));
 
-    buttons[0].addEventListener("click", () => editEvent(event));
-    buttons[1].addEventListener("click", () => deleteEvent(event.id));
+    item
+      .querySelector(".delete-sermon")
+      .addEventListener("click", () => deleteSermon(sermon.id));
 
-    eventsAdminList.appendChild(item);
+    sermonsAdminList.appendChild(item);
   });
 }
 
-function editEvent(event) {
-  eventId.value = event.id || "";
-  eventSortDate.value = event.event_sort_date || "";
-  eventEndDate.value = event.event_end_date || "";
-  eventTime.value = event.event_time || "";
-  eventEndTime.value = event.event_end_time || "";
-  recurrenceType.value = event.recurrence_type || "";
-  recurrenceWeekday.value = event.recurrence_weekday ?? "";
-  eventTitle.value = event.title || "";
-  eventDescription.value = event.description || "";
-  eventImage.value = "";
+function editSermon(sermon) {
+  sermonId.value = sermon.id || "";
+  sermonTitle.value = sermon.sermon_title || "";
+  sermonSpeaker.value = sermon.speaker || "";
+  sermonService.value = sermon.service || "";
+  sermonDate.value = sermon.sermon_date || "";
+  scripturePassage.value = sermon.scripture_passage || "";
+
+  // Browsers do not allow setting a file input's value.
+  sermonMp3.value = "";
+
+  if (cancelEdit) {
+    cancelEdit.hidden = false;
+  }
 
   window.scrollTo({
-    top: eventForm.offsetTop - 100,
+    top: sermonForm.offsetTop - 100,
     behavior: "smooth"
   });
 }
 
-eventForm.addEventListener("submit", async e => {
+function resetSermonForm() {
+  sermonForm.reset();
+  sermonId.value = "";
+
+  if (cancelEdit) {
+    cancelEdit.hidden = true;
+  }
+}
+
+sermonForm.addEventListener("submit", async e => {
   e.preventDefault();
-
-  if (recurrenceType.value === "weekly_in_range" && !eventEndDate.value) {
-    alert("Please choose an End Date for recurring events.");
-    return;
-  }
-
-  if (recurrenceType.value === "weekly_in_range" && recurrenceWeekday.value === "") {
-    alert("Please choose a Repeat Weekday for recurring events.");
-    return;
-  }
 
   const formData = new FormData();
 
-  formData.append("id", eventId.value);
-  formData.append("event_date", formatDisplayDate(eventSortDate.value));
-  formData.append("event_sort_date", eventSortDate.value);
-  formData.append("event_end_date", eventEndDate.value);
-  formData.append("event_time", eventTime.value);
-  formData.append("event_end_time", eventEndTime.value);
-  formData.append("recurrence_type", recurrenceType.value);
-  formData.append("recurrence_weekday", recurrenceWeekday.value);
-  formData.append("title", eventTitle.value);
-  formData.append("description", eventDescription.value);
+  formData.append("id", sermonId.value);
+  formData.append("sermon_title", sermonTitle.value);
+  formData.append("speaker", sermonSpeaker.value);
+  formData.append("service", sermonService.value);
+  formData.append("sermon_date", sermonDate.value);
+  formData.append("scripture_passage", scripturePassage.value);
 
-  if (eventImage.files.length > 0) {
-    formData.append("event_image", eventImage.files[0]);
+  if (sermonMp3.files.length > 0) {
+    formData.append("sermon_mp3", sermonMp3.files[0]);
   }
 
-  const isEditing = Boolean(eventId.value);
+  const isEditing = Boolean(sermonId.value);
 
-  const response = await fetch("/api/events", {
+  const response = await fetch("/api/sermons", {
     method: isEditing ? "PUT" : "POST",
     body: formData
   });
 
+  const resultText = await response.text();
+
   if (!response.ok) {
-    const errorText = await response.text();
-    alert("Event did not save: " + errorText);
+    alert("Sermon did not save: " + resultText);
     return;
   }
 
-  eventForm.reset();
-  eventId.value = "";
-  await loadEvents();
+  resetSermonForm();
+  await loadSermons();
 
-  alert(isEditing ? "Event updated." : "Event added.");
+  alert(isEditing ? "Sermon updated." : "Sermon added.");
 });
 
-cancelEdit.addEventListener("click", () => {
-  eventForm.reset();
-  eventId.value = "";
-});
+if (cancelEdit) {
+  cancelEdit.addEventListener("click", () => {
+    resetSermonForm();
+  });
+}
 
-async function deleteEvent(id) {
-  if (!confirm("Delete this event?")) return;
+async function deleteSermon(id) {
+  if (!confirm("Delete this sermon?")) return;
 
-  const response = await fetch(`/api/events?id=${id}`, {
+  const response = await fetch(`/api/sermons?id=${id}`, {
     method: "DELETE"
   });
 
   if (!response.ok) {
     const errorText = await response.text();
-    alert("Event did not delete: " + errorText);
+    alert("Sermon did not delete: " + errorText);
     return;
   }
 
-  await loadEvents();
+  if (sermonId.value === String(id)) {
+    resetSermonForm();
+  }
+
+  await loadSermons();
 }
 
-if (eventForm) {
-  loadEvents();
+if (sermonForm && sermonsAdminList) {
+  loadSermons();
 }
