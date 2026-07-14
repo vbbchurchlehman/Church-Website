@@ -1,7 +1,7 @@
 export async function onRequestGet(context) {
   const { results } = await context.env.DB
     .prepare(`
-      SELECT id, sermon_title, sermon_date, speaker, service, mp3_url, created_at
+      SELECT id, sermon_title, sermon_date, speaker, service, scripture_passage, mp3_url, created_at
       FROM sermons
       ORDER BY sermon_date DESC, id DESC
     `)
@@ -17,10 +17,11 @@ export async function onRequestPost(context) {
     const sermonTitle = formData.get("sermon_title");
     const sermonDate = formData.get("sermon_date");
     const speaker = formData.get("speaker");
+    const scripturePassage = formData.get("scripture_passage");
     const service = formData.get("service");
     const mp3File = formData.get("mp3_file");
 
-    if (!sermonTitle || !sermonDate || !speaker || !service || !mp3File) {
+    if (!sermonTitle || !sermonDate || !speaker || !scripturePassage || !mp3File) {
       return Response.json(
         { success: false, error: "Missing required fields." },
         { status: 400 }
@@ -42,7 +43,7 @@ export async function onRequestPost(context) {
         INSERT INTO sermons (sermon_title, sermon_date, speaker, service, mp3_url)
         VALUES (?, ?, ?, ?, ?)
       `)
-      .bind(sermonTitle, sermonDate, speaker, service, mp3Url)
+      .bind(sermonTitle, sermonDate, speaker, scripturePassage, service, mp3Url)
       .run();
 
     return Response.json({ success: true });
