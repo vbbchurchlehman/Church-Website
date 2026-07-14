@@ -1,18 +1,28 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Manage Sermons | Victory Baptist Bible Church</title>
+
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
   <header class="site-header">
     <nav class="navbar">
       <a href="admin.html" class="logo">Admin Dashboard</a>
+
       <ul class="nav-links">
-        <li><a href="admin.html">Admin Home</a></li>
-        <li><a href="index.html">View Website</a></li>
+        <li>
+          <a href="admin.html">Admin Home</a>
+        </li>
+
+        <li>
+          <a href="index.html">View Website</a>
+        </li>
       </ul>
     </nav>
   </header>
@@ -20,53 +30,127 @@
   <main>
     <section class="section">
       <p class="section-label">Admin</p>
-      <h1>Manage Sermons</h1>
-      <p>Add or remove sermon audio files.</p>
 
-      <form id="sermonForm" class="contact-form admin-form" enctype="multipart/form-data">
+      <h1>Manage Sermons</h1>
+
+      <p>Add, edit, or remove sermon audio files.</p>
+
+      <form
+        id="sermonForm"
+        class="contact-form admin-form"
+        enctype="multipart/form-data"
+      >
+        <input
+          type="hidden"
+          id="sermonId"
+          name="id"
+        />
+
         <label>
           Sermon Title
-          <input type="text" id="sermonTitle" name="sermon_title" required />
+
+          <input
+            type="text"
+            id="sermonTitle"
+            name="sermon_title"
+            required
+          />
         </label>
 
         <label>
           Sermon Date
-          <input type="date" id="sermonDate" name="sermon_date" required />
+
+          <input
+            type="date"
+            id="sermonDate"
+            name="sermon_date"
+            required
+          />
         </label>
 
         <label>
           Speaker
-          <input type="text" id="speaker" name="speaker" required />
+
+          <input
+            type="text"
+            id="sermonSpeaker"
+            name="speaker"
+            required
+          />
         </label>
 
         <label>
           Scripture Passage
-          <input type="text" id="scripture_passage" name="scripture_passage" required />
-        </label>        
+
+          <input
+            type="text"
+            id="scripturePassage"
+            name="scripture_passage"
+            required
+          />
+        </label>
 
         <label>
           Service
-          <select id="service" name="service">
+
+          <select
+            id="sermonService"
+            name="service"
+            required
+          >
             <option value="">Select a service</option>
             <option value="Sunday School">Sunday School</option>
             <option value="Sunday Morning">Sunday Morning</option>
             <option value="Sunday Afternoon">Sunday Afternoon</option>
-            <option value="Wednesday Bible Study">Wednesday Bible Study</option>
+            <option value="Wednesday Bible Study">
+              Wednesday Bible Study
+            </option>
             <option value="Special Service">Special Service</option>
           </select>
         </label>
 
         <label>
           Sermon MP3
-          <input type="file" id="mp3File" name="mp3_file" accept="audio/mpeg,audio/mp3" required />
+
+          <input
+            type="file"
+            id="sermonMp3"
+            name="sermon_mp3"
+            accept="audio/mpeg,audio/mp3"
+          />
+
+          <small>
+            An MP3 is required when adding a sermon. Leave this blank while
+            editing to keep the existing audio file.
+          </small>
         </label>
 
-        <button class="btn primary" type="submit">Save Sermon</button>
+        <div class="admin-actions">
+          <button
+            class="btn primary"
+            type="submit"
+          >
+            Save Sermon
+          </button>
+
+          <button
+            id="cancelEdit"
+            class="btn secondary"
+            type="button"
+            hidden
+          >
+            Cancel Edit
+          </button>
+        </div>
       </form>
 
       <div class="admin-list">
         <h2>Current Sermons</h2>
-        <div id="sermonsAdminList" class="sermon-list"></div>
+
+        <div
+          id="sermonsAdminList"
+          class="sermon-list"
+        ></div>
       </div>
     </section>
   </main>
@@ -74,3 +158,4 @@
   <script src="manage-sermons.js"></script>
 </body>
 </html>
+```
