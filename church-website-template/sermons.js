@@ -23,7 +23,7 @@ async function loadPublicSermons() {
       <div class="sermon-box">
         <div>
           <h3>${sermon.sermon_title}</h3>
-          <p>${sermon.speaker} · ${sermon.service} · ${formatSermonDate(sermon.sermon_date)} · ${sermon.scripture_passage}</p>
+          <p>${sermon.speaker} · ${sermon.scripture_passage} · ${sermon.service} · ${formatSermonDate(sermon.sermon_date)}</p>
           <audio controls src="${sermon.mp3_url}"></audio>
         </div>
       </div>
